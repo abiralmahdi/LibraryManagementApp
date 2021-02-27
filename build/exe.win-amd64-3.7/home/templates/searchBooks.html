@@ -1,0 +1,215 @@
+{% extends 'layout.html' %} {% block body %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+  <section class="text-gray-700 body-font">
+    <div class="container px-5 py-5">
+      <div class="flex flex-wrap -mx-4 -mb-10 text-center">
+        <h1 class="h2 text-center mb-5">Book Records</h1>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% else %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+      
+        <div class="sm:w-1/2 mb-10 px-4 mt-5">
+            <form action="/books/searchBooks" class="form form-inline">
+                <input type="text" name="search" class="form form-control w-75"
+                  placeholder="Search by Book Title, Category, Publisher or Writer's Name" />
+                <button class="btn btn-primary btn-sm ml-3">Search</button>
+            </form>
+              <div class="table-responsive mt-2" style="height: 500px">
+            <table class="table table-striped" style="overflow-x: auto; overflow-y: auto">
+              <tr>
+                <th>ID</th>
+                <th>Book Title</th>
+                <th>Genre</th>
+                <th>Writer</th>
+                <th>Date of Issue</th>
+                <th>Publisher</th>
+                <th>Copies/Qty</th>
+                <th>Available Copies</th>
+              </tr>
+              {% for i in books %}
+              <tr>
+                <td>{{i.id}}</td>
+                <td>{{i.bookName}}</td>
+                <td>{{i.genre}}</td>
+                <td>{{i.writer}}</td>
+                <td>{{i.dateOfIssue}}</td>
+                <td>{{i.publisher}}</td>
+                <td>{{i.copies}}</td>
+                <td>{{i.availableCopies}}</td>
+                <td>
+                  <button class="btn btn-primary btn-sm" data-toggle="modal"
+                    data-target="#exampleModal{{forloop.counter}}">
+                    Borrow
+                  </button>
+                </td>
+                <td>
+                  <a href="/books/deleteBooks/{{i.id}}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-info" data-toggle="modal"
+                    data-target="#exampleModaledit{{forloop.counter}}">
+                    Edit
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Modal -->
+              <div class="modal fade" id="exampleModal{{forloop.counter}}" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">
+                        Borrow Book
+                      </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="/books/borrowBook/{{i.id}}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="Borrower ID" class="mb-3 form-control" placeholder="Borrower's ID" />
+                        <button class="btn btn-primary">Borrow</button>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- edit book Modal -->
+              <div class="modal fade" id="exampleModaledit{{forloop.counter}}" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">
+                        Edit Book
+                      </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="sm:w-1/2 mb-10 px-4">
+                        <form action="/books/editBooks/{{i.id}}" class="form" method="POST">
+                          {% csrf_token %}
+                          <div class="row">
+                            <input type="text" name="bookName1" value="{{i.bookName}}" class="form-control mx-1 w-25"
+                              placeholder="Book Title" />
+                            <input type="text" name="writer1" value="{{i.writer}}" class="form-control mx-1 w-50"
+                              placeholder="Writer" />
+                          </div>
+                          <div class="row my-3">
+                            <select type="text" name="genre1" value="{{i.genre}}" class="form-control form-row w-25 mx-1"
+                              placeholder="Genre">
+                              <option value="{{i.genre}}">{{i.genre}}</option>
+                              {% for j in genre %}
+                              <option value="{{j.name}}">{{j.name}}</option>
+                              {% endfor %}
+                            </select>
+                            <input type="text" name="publisher1" value="{{i.publisher}}" class="form-control mx-1 w-25"
+                              placeholder="Publisher" />
+                            <input type="text" name="copies1" value="{{i.copies}}"
+                              class="form-control form-row w-25 mx-1" placeholder="Copies" />
+                          </div>
+
+                          <button class="btn btn-primary btn-sm">
+                            Edit Book
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                    <!--container end.//-->
+
+                    <br /><br />
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                  </button>
+                </div>
+              </div>
+
+              {% endfor %}
+            </table>
+          </div>
+          <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModalborrow">
+            Add Book
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add book Modal -->
+  <div class="modal fade" id="exampleModalborrow" tabindex="-1" aria-labelledby="exampleModalborrowLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Book</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="sm:w-1/2 mb-10 px-4">
+            <form action="/books" class="form" method="POST">
+              {% csrf_token %}
+              <div class="row">
+                <input type="text" name="bookName" class="form-control mx-1 w-25" placeholder="Book Title" />
+                <input type="text" name="writer" class="form-control mx-1 w-50" placeholder="Writer" />
+              </div>
+              <div class="row my-3">
+                <select type="text" name="genre" class="form-control form-row w-25 mx-1" placeholder="Genre">
+                  <option value="">Select Genre</option>
+                  {% for j in genre %}
+                  <option value="{{j.name}}">{{j.name}}</option>
+                  {% endfor %}
+                </select>
+                <input type="text" name="publisher" class="form-control mx-1 w-25" placeholder="Publisher" />
+                <input type="text" name="copies" class="form-control form-row w-25 mx-1" placeholder="Copies" />
+              </div>
+
+              <button class="btn btn-primary btn-sm">Add Book</button>
+            </form>
+          </div>
+        </div>
+        <!--container end.//-->
+
+        <br /><br />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        Close
+      </button>
+    </div>
+  </div>
+
+</main>
+
+{% endblock %}

@@ -1,0 +1,190 @@
+{% extends 'layout.html' %}
+{% block body %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+  <section class="text-gray-700 body-font">
+    <div class="container px-5 py-5">
+      <div class="flex flex-wrap -mx-4 -mb-10 text-center">
+        <h1 class="h2 text-center">Employees and Staffs</h1>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% else %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+      
+
+        <div class="sm:w-1/2 mb-10 px-4">
+          {% block css %}
+
+          <style>
+            .divider-text {
+              position: relative;
+              text-align: center;
+              margin-top: 15px;
+              margin-bottom: 15px;
+            }
+
+            .divider-text span {
+              padding: 7px;
+              font-size: 12px;
+              position: relative;
+              z-index: 2;
+            }
+
+            .divider-text:after {
+              content: "";
+              position: absolute;
+              width: 100%;
+              border-bottom: 1px solid #ddd;
+              top: 55%;
+              left: 0;
+              z-index: 1;
+            }
+
+            .btn-facebook {
+              background-color: #405D9D;
+              color: #fff;
+            }
+          </style>
+          {% endblock %}
+
+          <div class="container mt-4">
+
+
+            <div class="sm:w-1/2 mb-10 px-4 mt-5">
+              <form action="/manageAccounts/search" class="form form-inline">
+                <input type="text" name='searchInput' class='form form-control w-75'
+                  placeholder="Search by Username.">
+                <button class='btn btn-primary btn-sm ml-3'>Search</button>
+              </form>
+              <div class="table-responsive mt-2" style='height: 300px'>
+                <table class="table table-striped">
+                  <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                  </tr>
+                  {% for i in accounts %}
+                  <tr>
+                    <td>{{i.username}}</td>
+                    <td>{{i.password}}</td>
+                    <td><a href="/manageAccounts/deleteAccounts/{{i.username}}" class="btn btn-sm btn-danger">Delete</a></td>
+                    <td><button data-toggle="modal" data-target="#exampleModaledit{{forloop.counter}}" class="btn btn-sm btn-info">Edit</button></td>
+                  </tr>
+
+                    <!-- Modal -->
+  <div class="modal fade" id="exampleModaledit{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Librarian Account</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card bg-light mx-auto my-5">
+            <article class="card-body mx-auto" style="max-width: 700px;">
+              <form action="/manageAccounts/edit/{{i.username}}" method="POST">
+                {% csrf_token %}
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input name="username" class="form-control" value='{{i.username}}' type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input name="password" class="form-control" value='{{i.password}}' type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group">
+                  <button type="submit" class="btn btn-dark btn-block"> Update Data </button>
+                </div> <!-- form-group// -->
+              </form>
+            </article>
+          </div> <!-- card.// -->
+
+        </div>
+        <!--container end.//-->
+
+        <br><br>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+
+                  {% endfor %}
+                </table>
+              </div>
+              <button class="mt-5 btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add Account</button>
+            </div>
+          </div>
+        </div>
+  </section>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Account</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card bg-light mx-auto my-5">
+            <article class="card-body mx-auto" style="max-width: 700px;">
+              <form action="/manageAccounts" method="POST">
+                {% csrf_token %}
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input name="username1" class="form-control" placeholder="UserName" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input name="password1" class="form-control" placeholder="Password" type="password" required>
+                </div> <!-- form-group// -->
+                <div class="form-group">
+                  <button type="submit" class="btn btn-dark btn-block"> Add Account </button>
+                </div> <!-- form-group// -->
+              </form>
+            </article>
+          </div> <!-- card.// -->
+
+        </div>
+        <!--container end.//-->
+
+        <br><br>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+</main>
+
+
+{% endblock %}

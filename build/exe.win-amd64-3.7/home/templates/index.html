@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+{% block body %}
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                    {% if messages %}
+                    {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+    
+                <div class="my-4 w-100 row row-cols-1 row-cols-sm-2 row-cols-md-4" width="900" height="380"
+                    id='overview'>
+                    <div class="card text-dark bg-warning mb-3 col m-3" style="max-width: 13rem;">
+                        <h5 class="card-header">Total Members</h5>
+                        <div class="card-body">
+                            <h5 class="card-text text-center" style="font-size: 55px;">{{members.count}}</h5>
+                        </div>
+                    </div>
+                    {% if user.is_authenticated and user.is_superuser %}
+                    <div class="card text-white bg-success mb-3 col m-3" style="max-width: 13rem;">
+                        <h5 class="card-header">Total Staffs</h5>
+                        <div class="card-body">
+                            <h5 class="card-text text-center my-auto" style="font-size: 55px;">{{staffs.count}}</h5>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- <div></div> -->
+                    {% endif %}
+                    <div class="card text-white bg-primary mb-3 col m-3" style="max-width: 13rem;">
+                        <h5 class="card-header">Total Books</h5>
+                        <div class="card-body">
+                            <h5 class="card-text text-center" style="font-size: 55px;">{{books.count}}</h5>
+                        </div>
+                    </div>
+                    <div class="card text-light bg-dark mb-3 col m-3" style="max-width: 13rem;">
+                        <h5 class="card-header">Total Genre</h5>
+                        <div class="card-body">
+                            <h5 class="card-text text-center" style="font-size: 55px;">{{genre.count}}</h5>
+                        </div>
+                    </div>
+                    <div class="card text-light bg-info mb-3 col m-3" style="max-width: 13rem;">
+                        <h5 class="card-header">Total Borrowed</h5>
+                        <div class="card-body">
+                            <h5 class="card-text text-center" style="font-size: 55px;">{{borrowedBooks.count}}</h5>
+                        </div>
+                    </div>
+                    <!-- <div class="card text-light bg-danger mb-3 col m-3" style="max-width: 13rem;">
+                        <h5 class="card-header">Total OverTime</h5>
+                        <div class="card-body">
+                            <h5 class="card-text text-center" style="font-size: 55px;">{{overtime.count}}</h5>
+                        </div>
+                    </div> -->
+                </div>
+                </main>
+
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+{% block body %}
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+  
+                    <section class="text-gray-700 body-font">
+                        <div class="container px-5 py-5">
+                          <div class="flex flex-wrap -mx-4 -mb-10 text-center">
+                            <h1 class="h2 text-center">Overtime Borrowers</h1>
+                            {% if messages %}
+                            {% for message in messages %}
+                            {% if message.tags == 'error' %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                              {{ message }}
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                              {{ message }}
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+          
+                            <div class="sm:w-1/2 mb-10 px-4 mt-5">
+                              <form action="/books/delayedBooks/searchOverDues" class="form form-inline">
+                                <input type="text" name='search' class='form form-control w-75' placeholder="Search by Book Title, Publisher, Borrwer's or Writer's Name">
+                                <button class='btn btn-primary btn-sm ml-3'>Search</button>
+                              </form>
+                                <div class="table-responsive mt-2" style='height: 400px'>
+                                    <table class="table table-striped" style="overflow-x: auto; overflow-y: auto;">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Book Title</th>
+                                            <th>Book ID</th>
+                                            <th>Genre</th>
+                                            <th>Writer</th>
+                                            <th>Borrowed By (Name)</th>
+                                            <th>Borrowed By (ID)</th>
+                                            <th>Date of Borrow</th>
+                                            <th>Date to Return</th>
+                                            <th>Publisher</th>
+                                        </tr>
+                                        {% for i in books %}
+                                        <tr>
+                                            <td>{{i.id}}</td>
+                                            <td>{{i.bookName}}</td>
+                                            <td>{{i.bookID}}</td>
+                                            <td>{{i.genre}}</td>
+                                            <td>{{i.writer}}i</td>
+                                            <td>{{i.borrowerName}}</td>
+                                            <td>{{i.borrowerID}}</td>
+                                            <td>{{i.borrowDate}}</td>
+                                            <td>{{i.returnDate}}</td>
+                                            <td>{{i.publisher}}</td>
+
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+    
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                </main>
+
+
+{% endblock %}

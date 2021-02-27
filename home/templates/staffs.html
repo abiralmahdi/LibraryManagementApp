@@ -1,0 +1,288 @@
+{% extends 'layout.html' %}
+{% block body %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+  <section class="text-gray-700 body-font">
+    <div class="container px-5 py-5">
+      <div class="flex flex-wrap -mx-4 -mb-10 text-center">
+        <h1 class="h2 text-center">Employees and Staffs</h1>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% else %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+      
+
+        <div class="sm:w-1/2 mb-10 px-4">
+          {% block css %}
+
+          <style>
+            .divider-text {
+              position: relative;
+              text-align: center;
+              margin-top: 15px;
+              margin-bottom: 15px;
+            }
+
+            .divider-text span {
+              padding: 7px;
+              font-size: 12px;
+              position: relative;
+              z-index: 2;
+            }
+
+            .divider-text:after {
+              content: "";
+              position: absolute;
+              width: 100%;
+              border-bottom: 1px solid #ddd;
+              top: 55%;
+              left: 0;
+              z-index: 1;
+            }
+
+            .btn-facebook {
+              background-color: #405D9D;
+              color: #fff;
+            }
+          </style>
+          {% endblock %}
+
+          <div class="container mt-4">
+
+
+            <div class="sm:w-1/2 mb-10 px-4 mt-5">
+              <form action="/staffs/searchStaffs" class="form form-inline">
+                <input type="text" name='searchInput' class='form form-control w-75'
+                  placeholder="Search by Name, ID, Contact or Email.">
+                <button class='btn btn-primary btn-sm ml-3'>Search</button>
+              </form>
+              <div class="table-responsive mt-2" style='height: 300px'>
+                <table class="table table-striped">
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Father's Name</th>
+                    <th>Mother's Name</th>
+                    <th>Date of Joining</th>
+                    <th>Address</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Pay</th>
+                    <th>Designation</th>
+                    <th>Leaves Attended</th>
+                  </tr>
+                  {% for i in staffs %}
+                  <tr>
+                    <td>{{i.id}}</td>
+                    <td>{{i.name}}</td>
+                    <td>{{i.fname}}</td>
+                    <td>{{i.mname}}</td>
+                    <td>{{i.dateOfJoin}}</td>
+                    <td>{{i.address}}</td>
+                    <td>{{i.contact}}</td>
+                    <td>{{i.email}}</td>
+                    <td>{{i.pay}}</td>
+                    <td>{{i.designation}}</td>
+                    <td>{{i.leavesAttended}}</td>
+                    <td><a href="/staffs/deleteStaff/{{i.id}}" class="btn btn-sm btn-danger">Delete</a></td>
+                    <td><button data-toggle="modal" data-target="#exampleModaledit{{forloop.counter}}" class="btn btn-sm btn-info">Edit</button></td>
+                  </tr>
+
+                    <!-- Modal -->
+  <div class="modal fade" id="exampleModaledit{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Staff/Employee</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card bg-light mx-auto my-5">
+            <article class="card-body mx-auto" style="max-width: 700px;">
+              <form action="/staffs/editStaff/{{i.id}}" method="POST">
+                {% csrf_token %}
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input name="name" class="form-control" value='{{i.name}}' placeholder="Name" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input name="ftname1" class="form-control" value='{{i.fname}}' placeholder="Father's Name" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input name="mtname1" class="form-control" value='{{i.mname}}' placeholder="Mother's Name" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                  </div>
+                  <input name="email1" class="form-control" value='{{i.email}}' placeholder="Email address" type="email" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                  </div>
+                  <input name="contact1" class="form-control" value='{{i.contact}}' placeholder="Phone number" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-home"></i> </span>
+                  </div>
+                  <input name="address1" class="form-control" value='{{i.address}}' placeholder="Address" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input class="form-control" name='designation1' value='{{i.designation}}' placeholder="Designation" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input class="form-control" name='pay1' value='{{i.pay}}' placeholder="Pay" type="number" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input class="form-control" name='leave1' value='{{i.leavesAttended}}' placeholder="Leaves Attended" type="number" required>
+                </div> <!-- form-group// -->
+
+                <div class="form-group">
+                  <button type="submit" class="btn btn-dark btn-block"> Update Data </button>
+                </div> <!-- form-group// -->
+              </form>
+            </article>
+          </div> <!-- card.// -->
+
+        </div>
+        <!--container end.//-->
+
+        <br><br>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+
+                  {% endfor %}
+                </table>
+              </div>
+              <button class="mt-5 btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add Staff</button>
+            </div>
+          </div>
+        </div>
+  </section>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Staff/Employee</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card bg-light mx-auto my-5">
+            <article class="card-body mx-auto" style="max-width: 700px;">
+              <form action="/staffs/addStaff" method="POST">
+                {% csrf_token %}
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input name="fname" class="form-control" placeholder="First name" type="text" required>
+                  <input name="lname" class="ml-2 form-control" placeholder="Last name" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input name="ftname" class="form-control" placeholder="Father's Name" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input name="mtname" class="form-control" placeholder="Mother's Name" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                  </div>
+                  <input name="email" class="form-control" placeholder="Email address" type="email" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                  </div>
+                  <input name="contact" class="form-control" placeholder="Phone number" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-home"></i> </span>
+                  </div>
+                  <input name="address" class="form-control" placeholder="Address" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input class="form-control" name='designation' placeholder="Designation" type="text" required>
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                  </div>
+                  <input class="form-control" name='pay' placeholder="Pay" type="number" required>
+                </div> <!-- form-group// -->
+                <div class="form-group">
+                  <button type="submit" class="btn btn-dark btn-block"> Add Employee </button>
+                </div> <!-- form-group// -->
+              </form>
+            </article>
+          </div> <!-- card.// -->
+
+        </div>
+        <!--container end.//-->
+
+        <br><br>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+</main>
+
+
+{% endblock %}
